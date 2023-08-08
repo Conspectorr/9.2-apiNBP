@@ -1,0 +1,15 @@
+import requests
+import csv
+
+response = requests.get("http://api.nbp.pl/api/exchangerates/tables/C?format=json")
+data = response.json()
+rates = data[0]["rates"]
+
+csv_filename = "exchange_rates.csv"
+with open(csv_filename, "w", newline="", encoding="utf-8") as csv_file:
+    csv_writer = csv.writer(csv_file, delimiter=";")
+    csv_writer.writerow(["currency", "code", "bid", "ask"])
+    for rate in rates:
+        csv_writer.writerow([rate["currency"], rate["code"], rate["bid"], rate["ask"]])
+
+print(f"Dane kursów walut zostały zapisane do pliku: {csv_filename}")
